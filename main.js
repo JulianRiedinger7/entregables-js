@@ -1,5 +1,4 @@
 
-
 class UsuarioValorant{
     constructor(agente,rango,equipo,nombre){
         this.agenteFav = agente;
@@ -35,7 +34,9 @@ const user = new UsuarioValorant(
 } */
 
 const saludarUsuario = user => {
-    while(user.nick == ""){
+    console.log(user.nick.length)
+    console.log(typeof user.nick.length)
+    while(user.nick == "" || user.nick.length >= 20){
         user.nick = prompt("Ingrese un nick valido");
     }
     resultado.innerHTML += `Hola <b>${user.nick.toUpperCase()}</b>, espero estes muy bien! <br>`;
@@ -58,40 +59,68 @@ const analizarRango = user => {
 }
 
 const analizarAgente = user => {
-    const agentes = {
-        iniciador: ["sova","kayo","skye","breach"],
-        controlador: ["brimstone","omen","astra","viper"],
-        duelista: ["jett","reyna","yoru","phoenix","raze","neon"],
-        centinela: ["killjoy","cypher","sage","chamber"]
-    }
-    user.agenteFav = user.agenteFav.toLowerCase();
 
-    while(!agentes.iniciador.includes(user.agenteFav) && !agentes.controlador.includes(user.agenteFav) 
-    && !agentes.duelista.includes(user.agenteFav) && !agentes.centinela.includes(user.agenteFav)){
+    const rolesYAgentes = [
+        {
+            rol: "iniciador",
+            agentes: ["sova","kayo","skye","breach","fade"],
+            tarea: "Apoyar al equipo con informacion sobre los enemigos"
+        },
+        {
+            rol: "controlador",
+            agentes: ["brimstone","omen","astra","viper"],
+            tarea: "Ayudar al equipo tapando zonas peligrosas con sus humos"
+        },
+        {
+            rol: "duelista",
+            agentes: ["jett","reyna","yoru","phoenix","raze","neon"],
+            tarea: "Ser el primero en ingresar a la accion con sus habilidades de movimiento"
+        },
+        {
+            rol: "centinela",
+            agentes: ["killjoy","cypher","sage","chamber"],
+            tarea: "Vigilar los flancos y ralentizar a los enemigos con sus habilidades"
+        },
+    ]
+
+    let userArray = rolesYAgentes
+    .filter(objeto => objeto.agentes.includes(user.agenteFav.toLowerCase()))
+    .map(objeto => ({rol: objeto.rol, tarea: objeto.tarea}));
+    while(userArray.length === 0){
         user.agenteFav = prompt("Ingrese un agente valido");
+        userArray = rolesYAgentes
+        .filter(objeto => objeto.agentes.includes(user.agenteFav.toLowerCase()))
+        .map(objeto => ({rol: objeto.rol, tarea: objeto.tarea}));
     }
 
-    for(const agente in agentes){
-        if(agentes[agente].includes(user.agenteFav)){
-            resultado.innerHTML += `Tu agente favorito es <b>${user.agenteFav.toUpperCase()}</b>, entonces te gusta jugar el rol de <b>${agente.toUpperCase()}</b>! <br>`;
-            break;
-        }
-    }
+    resultado.innerHTML += `Tu agente favorito es <b>${user.agenteFav.toUpperCase()}</b>, el cual pertenece al rol de <b>${userArray[0].rol.toUpperCase()}</b> <br> La tarea principal es <b>${userArray[0].tarea}</b> <br>`;
+
     
     analizarEquipo(user);
 }
 
 const analizarEquipo = user => {
-    const equiposMasters = ["g2","liquid","fnatic","zeta division","nip","loud","optic","guard","paper rex","kru","xerxia","drx"];
-    user.equipoFav = user.equipoFav.toLowerCase();
-    while(user.equipoFav == ""){
-        user.equipoFav = prompt("Ingrese un equipo valido");
-    }
-    if(equiposMasters.includes(user.equipoFav)){
-        resultado.innerHTML += `Tu equipo favorito <b>${user.equipoFav.toUpperCase()}</b> clasifico a la ultima Masters en Reykjavik! <br>`;
-    } else {
-        resultado.innerHTML += `Tu equipo favorito <b>${user.equipoFav.toUpperCase()}</b> no se encuentra en la ultima Masters!`;
-    }
+    const equiposMasters = [
+        {nombre: 'Optic', puesto: 'Campeon', region: 'Norteamerica'},
+        {nombre: 'Loud', puesto: 'Subcampeon', region: 'Brasil'},
+        {nombre: 'Zeta Division', puesto: 'Tercero', region: 'Japon'},
+        {nombre: 'Paper Rex', puesto: 'Cuarto', region: 'Singapur'},
+        {nombre: 'G2', puesto: 'Quinto/Sexto', region: 'Europa'},
+        {nombre: 'DRX', puesto: 'Quinto/Sexto', region: 'Coreal del Sur'},
+        {nombre: 'The Guard', puesto: 'Septimo/Octavo', region: 'Norteamerica'},
+        {nombre: 'Liquid', puesto: 'Septimo/Octavo', region: 'Europa'},
+        {nombre: 'Fpx', puesto: 'Octavo', region: 'Europa'},
+        {nombre: 'Nip', puesto: 'Noveno/Decimo', region: 'Brasil'},
+        {nombre: 'Xerxia', puesto: 'Noveno/Decimo', region: 'Tailandia'},
+        {nombre: 'Fnatic', puesto: 'Onceavo/Doceavo', region: 'Europa'},
+        {nombre: 'Kru', puesto: 'Onceavo/Doceavo', region: 'Latinoamerica'}
+    ]
+
+    let userTeam = equiposMasters.filter(equipo => equipo.nombre.toLowerCase() === user.equipoFav.toLowerCase());
+
+    if(userTeam.length > 0){
+        resultado.innerHTML += `Tu equipo favorito es <b>${userTeam[0].nombre.toUpperCase()}</b> y clasifico a la ultima Masters en Reykjavik! <br> La region del equipo es <b>${userTeam[0].region.toUpperCase()}</b> y su puesto en el torneo fue de <b>${userTeam[0].puesto.toUpperCase()}</b>!`
+    } else resultado.innerHTML += `Tu equipo favorito es ${user.equipoFav.toUpperCase()}, y lametablemente no clasifico a la ultima Masters en Reykjavik 😢`
 }
 
 saludarUsuario(user);
