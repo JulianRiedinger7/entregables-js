@@ -33,13 +33,17 @@ const user = new UsuarioValorant(
     nick: prompt("Ingresa tu nick en el juego")
 } */
 
+let contenedor = document.querySelector('.contenedor');
+let parrafo = document.createElement('p');
+let h2 = document.createElement('h2');
+
 const saludarUsuario = user => {
-    console.log(user.nick.length)
-    console.log(typeof user.nick.length)
     while(user.nick == "" || user.nick.length >= 20){
         user.nick = prompt("Ingrese un nick valido");
     }
-    resultado.innerHTML += `Hola <b>${user.nick.toUpperCase()}</b>, espero estes muy bien! <br>`;
+    h2.innerHTML = `<h2>Hola <b>${user.nick.toUpperCase()}</b>, espero estes muy bien!</h2>`;
+    h2.style.color = 'red';
+    contenedor.appendChild(h2);
     analizarRango(user);
 }
 
@@ -51,10 +55,10 @@ const analizarRango = user => {
         user.rango = prompt("Ingrese un rango valido");
     }
     if(rangos.indexOf(user.rango) > 3 && rangos.indexOf(user.rango) < 7){
-        resultado.innerHTML += `Estas en un rango de <b>${user.rango.toUpperCase()}</b>, lo cual demuestra que tenes gran habilidad! <br>`;
+        parrafo.innerHTML = `Estas en un rango de <b>${user.rango.toUpperCase()}</b>, lo cual demuestra que tenes gran habilidad! <br>`;
     }else if(rangos.indexOf(user.rango) == 7){
-        resultado.innerHTML += `Estas en un rango de <b>${user.rango.toUpperCase()}</b>, el mas alto del juego! <br>`;
-    }else resultado.innerHTML += `Estas en un rango de <b>${user.rango.toUpperCase()}</b>, te recomiendo guias de youtube para mejorar! <br>`;
+        parrafo.innerHTML = `Estas en un rango de <b>${user.rango.toUpperCase()}</b>, el mas alto del juego! <br>`;
+    }else parrafo.innerHTML = `Estas en un rango de <b>${user.rango.toUpperCase()}</b>, te recomiendo guias de youtube para mejorar! <br>`;
     analizarAgente(user);
 }
 
@@ -93,7 +97,7 @@ const analizarAgente = user => {
         .map(objeto => ({rol: objeto.rol, tarea: objeto.tarea}));
     }
 
-    resultado.innerHTML += `Tu agente favorito es <b>${user.agenteFav.toUpperCase()}</b>, el cual pertenece al rol de <b>${userArray[0].rol.toUpperCase()}</b> <br> La tarea principal es <b>${userArray[0].tarea}</b> <br>`;
+    parrafo.innerHTML += `Tu agente favorito es <b>${user.agenteFav.toUpperCase()}</b>, el cual pertenece al rol de <b>${userArray[0].rol.toUpperCase()}</b> <br> La tarea principal es <b>${userArray[0].tarea}</b> <br>`;
 
     
     analizarEquipo(user);
@@ -119,8 +123,11 @@ const analizarEquipo = user => {
     let userTeam = equiposMasters.filter(equipo => equipo.nombre.toLowerCase() === user.equipoFav.toLowerCase());
 
     if(userTeam.length > 0){
-        resultado.innerHTML += `Tu equipo favorito es <b>${userTeam[0].nombre.toUpperCase()}</b> y clasifico a la ultima Masters en Reykjavik! <br> La region del equipo es <b>${userTeam[0].region.toUpperCase()}</b> y su puesto en el torneo fue de <b>${userTeam[0].puesto.toUpperCase()}</b>!`
-    } else resultado.innerHTML += `Tu equipo favorito es ${user.equipoFav.toUpperCase()}, y lametablemente no clasifico a la ultima Masters en Reykjavik 😢`
+        parrafo.innerHTML += `Tu equipo favorito es <b>${userTeam[0].nombre.toUpperCase()}</b> y clasifico a la ultima Masters en Reykjavik! <br> La region del equipo es <b>${userTeam[0].region.toUpperCase()}</b> y su puesto en el torneo fue de <b>${userTeam[0].puesto.toUpperCase()}</b>!`
+    } else parrafo.innerHTML += `Tu equipo favorito es <b>${user.equipoFav.toUpperCase()}</b>, y lametablemente no clasifico a la ultima Masters en Reykjavik 😢`
 }
+console.log(parrafo);
+
 
 saludarUsuario(user);
+contenedor.appendChild(parrafo);
