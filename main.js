@@ -18,25 +18,51 @@ class UsuarioValorant{
 
 }
 
-const user = new UsuarioValorant(
-    prompt("Ingresa tu agente favorito"),
-    prompt("Ingresa tu rango, sin especificar division"),
-    prompt("Ingresa tu equipo favorito"),
-    prompt("Ingresa tu nick en el juego")
-);
 
-//Esta declaracion de abajo reemplazaria a la clase, cual es mejor? Entiendo que funcionan de la misma manera
-/* const user = {
-    agenteFav: prompt("Ingresa tu agente favorito: "),
-    rango: prompt("Ingresa tu rango, sin especificar division"),
-    equipoFav: prompt("Ingresa tu equipo favorito"),
-    nick: prompt("Ingresa tu nick en el juego")
-} */
+const rolesYAgentes = [
+    {
+        rol: "iniciador",
+        agentes: ["Sova","Kayo","Skye","Breach","Fade"],
+        tarea: "Apoyar al equipo con informacion sobre los enemigos"
+    },
+    {
+        rol: "controlador",
+        agentes: ["Brimstone","Omen","Astra","Viper"],
+        tarea: "Ayudar al equipo tapando zonas peligrosas con sus humos"
+    },
+    {
+        rol: "duelista",
+        agentes: ["Jett","Reyna","Yoru","Phoenix","Raze","Neon"],
+        tarea: "Ser el primero en ingresar a la accion con sus habilidades de movimiento"
+    },
+    {
+        rol: "centinela",
+        agentes: ["Killjoy","Cypher","Sage","Chamber"],
+        tarea: "Vigilar los flancos y ralentizar a los enemigos con sus habilidades"
+    },
+]
 
 let contenedor = document.querySelector('.contenedor');
 let parrafo = document.createElement('p');
 let h2 = document.createElement('h2');
+let imagen = document.createElement('img');
 
+/* contenedor.appendChild(imagen); */
+
+const elegirAgenteFavorito = rolYagentes =>{
+    const soloAgentes = rolYagentes.map(objeto => objeto.agentes);
+    
+    const select = document.createElement('select');
+    soloAgentes.forEach(agentes => {
+        for(const agente of agentes){
+            select.innerHTML += `<option id="${agentes.indexOf(agente)}">${agente}</option>`
+        }
+    });
+    document.body.appendChild(select);
+}
+elegirAgenteFavorito(rolesYAgentes);
+
+/* //Comprueba que el nombre del usuario no sea demasiado largo y genera un saludo
 const saludarUsuario = user => {
     while(user.nick == "" || user.nick.length >= 20){
         user.nick = prompt("Ingrese un nick valido");
@@ -47,7 +73,7 @@ const saludarUsuario = user => {
     analizarRango(user);
 }
 
-
+//Comprueba si es valido y dentro de que rango se encuentra el usuario y añade una descripcion
 const analizarRango = user => {
     const rangos = ["hierro","bronce","plata","oro","platino","diamante","inmortal","radiante"];
     user.rango = user.rango.toLowerCase();
@@ -62,30 +88,9 @@ const analizarRango = user => {
     analizarAgente(user);
 }
 
-const analizarAgente = user => {
 
-    const rolesYAgentes = [
-        {
-            rol: "iniciador",
-            agentes: ["sova","kayo","skye","breach","fade"],
-            tarea: "Apoyar al equipo con informacion sobre los enemigos"
-        },
-        {
-            rol: "controlador",
-            agentes: ["brimstone","omen","astra","viper"],
-            tarea: "Ayudar al equipo tapando zonas peligrosas con sus humos"
-        },
-        {
-            rol: "duelista",
-            agentes: ["jett","reyna","yoru","phoenix","raze","neon"],
-            tarea: "Ser el primero en ingresar a la accion con sus habilidades de movimiento"
-        },
-        {
-            rol: "centinela",
-            agentes: ["killjoy","cypher","sage","chamber"],
-            tarea: "Vigilar los flancos y ralentizar a los enemigos con sus habilidades"
-        },
-    ]
+//Comprueba si el agente existe, si existe añade una imagen del agente con la descripcion del rol y tarea
+const analizarAgente = user => {
 
     let userArray = rolesYAgentes
     .filter(objeto => objeto.agentes.includes(user.agenteFav.toLowerCase()))
@@ -97,12 +102,20 @@ const analizarAgente = user => {
         .map(objeto => ({rol: objeto.rol, tarea: objeto.tarea}));
     }
 
+
+    imagen.setAttribute('src',`./img/${user.agenteFav.toLowerCase()}.jpg`);
+    imagen.setAttribute('alt',`./img/${user.agenteFav.toLowerCase()}`);
+    
+
+
     parrafo.innerHTML += `Tu agente favorito es <b>${user.agenteFav.toUpperCase()}</b>, el cual pertenece al rol de <b>${userArray[0].rol.toUpperCase()}</b> <br> La tarea principal es <b>${userArray[0].tarea}</b> <br>`;
 
     
     analizarEquipo(user);
 }
 
+
+//Comprueba si el equipo participo o no de la ultima Masters, si participo dice su puesto y region
 const analizarEquipo = user => {
     const equiposMasters = [
         {nombre: 'Optic', puesto: 'Campeon', region: 'Norteamerica'},
@@ -126,8 +139,7 @@ const analizarEquipo = user => {
         parrafo.innerHTML += `Tu equipo favorito es <b>${userTeam[0].nombre.toUpperCase()}</b> y clasifico a la ultima Masters en Reykjavik! <br> La region del equipo es <b>${userTeam[0].region.toUpperCase()}</b> y su puesto en el torneo fue de <b>${userTeam[0].puesto.toUpperCase()}</b>!`
     } else parrafo.innerHTML += `Tu equipo favorito es <b>${user.equipoFav.toUpperCase()}</b>, y lametablemente no clasifico a la ultima Masters en Reykjavik 😢`
 }
-console.log(parrafo);
 
 
 saludarUsuario(user);
-contenedor.appendChild(parrafo);
+contenedor.appendChild(parrafo); */

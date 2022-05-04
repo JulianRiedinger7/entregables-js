@@ -5,9 +5,7 @@
 
 body{
     color: white;
-}
-
-header{
+    font-family: sans-serif;
     background-image: url(../img/valorant-bg.png);
     background-position: center center;
     background-repeat: no-repeat;
@@ -19,3 +17,35 @@ header{
 p{
     line-height: 1.7;
 }
+
+.contenedor{
+    width: 30%;
+    margin: 0 auto;
+    border: 2px solid black;
+    border-radius: 10px;
+    background-color: #0F1822;
+}
+
+.contenedor img{
+    width: 100%;
+    border-top-right-radius: 10px;
+    border-top-left-radius: 10px;
+}
+
+
+
+
+/* /* const user = new UsuarioValorant(
+    prompt("Ingresa tu agente favorito"),
+    prompt("Ingresa tu rango, sin especificar division"),
+    prompt("Ingresa tu equipo favorito"),
+    prompt("Ingresa tu nick en el juego")
+); */
+
+/* Esta declaracion de abajo reemplazaria a la clase, cual es mejor? Entiendo que funcionan de la misma manera */
+/* const user = {
+    agenteFav: prompt("Ingresa tu agente favorito: "),
+    rango: prompt("Ingresa tu rango, sin especificar division"),
+    equipoFav: prompt("Ingresa tu equipo favorito"),
+    nick: prompt("Ingresa tu nick en el juego")
+} */ 
