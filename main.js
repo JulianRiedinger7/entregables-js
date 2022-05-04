@@ -1,24 +1,4 @@
 
-class UsuarioValorant{
-    constructor(agente,rango,equipo,nombre){
-        this.agenteFav = agente;
-        this.rango = rango;
-        this.equipoFav = equipo;
-        this.nick = nombre;
-        this.nickCambiado = false;
-    }
-
-    cambiarNick(){
-        if(!this.nickCambiado){
-            let nuevoNick = prompt("Ingresa tu nuevo nombre en Valorant");
-            this.nick = nuevoNick;
-            this.nickCambiado = true;
-        } else alert("Solo puedes cambiar tu nombre una vez cada 30 dias.");
-    }
-
-}
-
-
 const rolesYAgentes = [
     {
         rol: "iniciador",
@@ -42,80 +22,157 @@ const rolesYAgentes = [
     },
 ]
 
-let contenedor = document.querySelector('.contenedor');
-let parrafo = document.createElement('p');
-let h2 = document.createElement('h2');
-let imagen = document.createElement('img');
+const rangos = ["Hierro","Bronce","Plata","Oro","Platino","Diamante","Inmortal","Radiante"];
 
-/* contenedor.appendChild(imagen); */
+const mainContainer = document.querySelector('.main-container')
 
+const contenedorAgente = document.createElement('div');
+contenedorAgente.classList.add('contenedor-agente')
+
+const contenedorRango = document.createElement('div');
+contenedorRango.classList.add('contenedor-rango');
+
+
+//Recupera los datos del input text escuchando el evento submit del form, generando una bienvenida.
+const darBienvenida = () =>{
+    const nickForm = document.querySelector('#formulario');
+
+    nickForm.addEventListener('submit',(e)=>{
+        e.preventDefault();
+        const h2 = document.createElement('h2');
+        const hijosForm = e.target.children;
+        console.log(hijosForm)
+        h2.innerHTML = `Hola ${hijosForm[1].value.toUpperCase()}, espero estes muy bien!`;
+        mainContainer.appendChild(h2);
+        elegirAgenteFavorito(rolesYAgentes);
+    })
+}
+
+
+
+
+
+//Crea un select con cada uno de los agentes del array rolesYAgentes para que el usuario elija su favorito
 const elegirAgenteFavorito = rolYagentes =>{
-    const soloAgentes = rolYagentes.map(objeto => objeto.agentes);
-    
+    const label = document.createElement('label');
+    label.setAttribute('for','agentes');
+    label.textContent = "Elije tu agente favorito: "
     const select = document.createElement('select');
+    select.setAttribute('name','agentes');
+    select.innerHTML = `<option>Ninguno</option>`;
+    contenedorAgente.appendChild(label);
+
+    const soloAgentes = rolYagentes.map(objeto => objeto.agentes);
     soloAgentes.forEach(agentes => {
         for(const agente of agentes){
-            select.innerHTML += `<option id="${agentes.indexOf(agente)}">${agente}</option>`
+            select.innerHTML += `<option value="${agente}">${agente}</option>`
         }
     });
-    document.body.appendChild(select);
-}
-elegirAgenteFavorito(rolesYAgentes);
 
-/* //Comprueba que el nombre del usuario no sea demasiado largo y genera un saludo
-const saludarUsuario = user => {
-    while(user.nick == "" || user.nick.length >= 20){
-        user.nick = prompt("Ingrese un nick valido");
-    }
-    h2.innerHTML = `<h2>Hola <b>${user.nick.toUpperCase()}</b>, espero estes muy bien!</h2>`;
-    h2.style.color = 'red';
-    contenedor.appendChild(h2);
-    analizarRango(user);
-}
+    contenedorAgente.appendChild(select);
 
-//Comprueba si es valido y dentro de que rango se encuentra el usuario y añade una descripcion
-const analizarRango = user => {
-    const rangos = ["hierro","bronce","plata","oro","platino","diamante","inmortal","radiante"];
-    user.rango = user.rango.toLowerCase();
-    while(rangos.indexOf(user.rango) == -1){
-        user.rango = prompt("Ingrese un rango valido");
-    }
-    if(rangos.indexOf(user.rango) > 3 && rangos.indexOf(user.rango) < 7){
-        parrafo.innerHTML = `Estas en un rango de <b>${user.rango.toUpperCase()}</b>, lo cual demuestra que tenes gran habilidad! <br>`;
-    }else if(rangos.indexOf(user.rango) == 7){
-        parrafo.innerHTML = `Estas en un rango de <b>${user.rango.toUpperCase()}</b>, el mas alto del juego! <br>`;
-    }else parrafo.innerHTML = `Estas en un rango de <b>${user.rango.toUpperCase()}</b>, te recomiendo guias de youtube para mejorar! <br>`;
-    analizarAgente(user);
-}
-
-
-//Comprueba si el agente existe, si existe añade una imagen del agente con la descripcion del rol y tarea
-const analizarAgente = user => {
-
-    let userArray = rolesYAgentes
-    .filter(objeto => objeto.agentes.includes(user.agenteFav.toLowerCase()))
-    .map(objeto => ({rol: objeto.rol, tarea: objeto.tarea}));
-    while(userArray.length === 0){
-        user.agenteFav = prompt("Ingrese un agente valido");
-        userArray = rolesYAgentes
-        .filter(objeto => objeto.agentes.includes(user.agenteFav.toLowerCase()))
-        .map(objeto => ({rol: objeto.rol, tarea: objeto.tarea}));
-    }
-
-
-    imagen.setAttribute('src',`./img/${user.agenteFav.toLowerCase()}.jpg`);
-    imagen.setAttribute('alt',`./img/${user.agenteFav.toLowerCase()}`);
+    select.addEventListener('change',(e)=>{
+        contenedorAgente.innerHTML = ''
+        const h2 = document.createElement('h2');
+        const elegido = e.target.value;
+        h2.innerHTML = `Tu agente favorito es ${elegido}`;
+        contenedorAgente.appendChild(h2);
+        analizarAgente(elegido);
+    })
     
-
-
-    parrafo.innerHTML += `Tu agente favorito es <b>${user.agenteFav.toUpperCase()}</b>, el cual pertenece al rol de <b>${userArray[0].rol.toUpperCase()}</b> <br> La tarea principal es <b>${userArray[0].tarea}</b> <br>`;
-
+    mainContainer.appendChild(contenedorAgente);
     
-    analizarEquipo(user);
+}
+
+//Analiza el agente elegido con el select, brindando una imagen, su rol y la tarea
+const analizarAgente = agente => {
+    const imagen = document.createElement('img');
+    const parrafo = document.createElement('p');
+
+    console.log(agente);
+
+    const agenteInfo = rolesYAgentes.find(objeto => objeto.agentes.includes(agente));
+    console.log(agenteInfo);
+
+    imagen.setAttribute('src',`./img/${agente.toLowerCase()}.jpg`);
+    parrafo.innerHTML = `<b>${agente.toUpperCase()}</b> pertenece al rol de <b>${agenteInfo.rol.toUpperCase()}</b> y su principal tarea es ${agenteInfo.tarea}`;
+
+    contenedorAgente.appendChild(imagen);
+    contenedorAgente.appendChild(parrafo);
+    elegirRango(rangos);
 }
 
 
-//Comprueba si el equipo participo o no de la ultima Masters, si participo dice su puesto y region
+const elegirRango = rangos =>{
+    const label = document.createElement('label');
+    label.setAttribute('for','rangos');
+    label.textContent = 'Elije tu rango: '
+    const select = document.createElement('select');
+    select.setAttribute('name','rangos');
+    select.innerHTML = `<option>Ninguno</option>`;
+    contenedorRango.appendChild(label);
+    for(const rango of rangos){
+        select.innerHTML += `<option value="${rango}">${rango}</option>`
+    }
+
+    select.addEventListener('change',(e)=>{
+        contenedorRango.innerHTML = '';
+        const h2 = document.createElement('h2');
+        h2.innerHTML = `Tu rango es ${e.target.value}`;
+        contenedorRango.appendChild(h2);
+        analizarRango(e.target.value);
+    })
+
+    contenedorRango.appendChild(select);
+    mainContainer.appendChild(contenedorRango)
+}
+
+
+const analizarRango = rango =>{
+    const imagen = document.createElement('img');
+    const parrafo = document.createElement('p');
+
+    imagen.setAttribute('src',`./img/${rango.toLowerCase()}.jpg`);
+
+    switch(rango){
+        case 'Hierro':
+            parrafo.textContent = 'Estas en el rango mas bajo del juego, te recomiendo guias para mejorar';
+            break;
+        case 'Bronce':
+            parrafo.textContent = 'Estas en un rango bajo, tenes que seguir practicando';
+            break;
+        case 'Plata':
+            parrafo.textContent = 'Estas mejorando, tenes que seguir asi';
+            break;
+        case 'Oro':
+            parrafo.textContent = 'Estas en un rango intermedio, segui practicando tu punteria';
+            break;
+        case 'Platino':
+            parrafo.textContent = 'Estas por encima del promedio, segui asi';
+            break;
+        case 'Diamante':
+            parrafo.textContent = 'Estas en un rango alto, tu habilidad es muy buena';
+            break;
+        case 'Inmortal':
+            parrafo.textContent = 'Estas por llegar al rango mas alto, tenes mucha habilidad';
+            break;
+        case 'Radiante':
+            parrafo.textContent = 'Estas en el rango mas alto del juego, podes competir profesionalmente';
+            break;
+        default:
+            parrafo.textContent = 'Tienes que elegir un rango';
+            break;
+    }
+
+    contenedorRango.appendChild(imagen);
+    contenedorRango.appendChild(parrafo);
+
+}
+
+darBienvenida();
+
+
+/* //Comprueba si el equipo participo o no de la ultima Masters, si participo dice su puesto y region
 const analizarEquipo = user => {
     const equiposMasters = [
         {nombre: 'Optic', puesto: 'Campeon', region: 'Norteamerica'},
@@ -138,8 +195,4 @@ const analizarEquipo = user => {
     if(userTeam.length > 0){
         parrafo.innerHTML += `Tu equipo favorito es <b>${userTeam[0].nombre.toUpperCase()}</b> y clasifico a la ultima Masters en Reykjavik! <br> La region del equipo es <b>${userTeam[0].region.toUpperCase()}</b> y su puesto en el torneo fue de <b>${userTeam[0].puesto.toUpperCase()}</b>!`
     } else parrafo.innerHTML += `Tu equipo favorito es <b>${user.equipoFav.toUpperCase()}</b>, y lametablemente no clasifico a la ultima Masters en Reykjavik 😢`
-}
-
-
-saludarUsuario(user);
-contenedor.appendChild(parrafo); */
+} */
