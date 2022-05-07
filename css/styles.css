@@ -49,6 +49,16 @@ h2{
     width: 100%;
 }
 
+.error{
+    width: 60%;
+    margin: 0 auto;
+    background-color: rgb(142, 11, 11);
+    padding: 2rem;
+    color: white;
+    margin-top: 1rem;
+    border-radius: 5px;
+}
+
 
 
 @media screen and (max-width: 768px){

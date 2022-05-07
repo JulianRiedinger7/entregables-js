@@ -32,23 +32,45 @@ contenedorAgente.classList.add('contenedor-agente')
 const contenedorRango = document.createElement('div');
 contenedorRango.classList.add('contenedor-rango');
 
+const nickForm = document.querySelector('#formulario');
+
+let infoUser = {};
 
 //Recupera los datos del input text escuchando el evento submit del form, generando una bienvenida.
-const darBienvenida = () => {
-    const nickForm = document.querySelector('#formulario');
+const darBienvenida = evt => {
+    evt.preventDefault();
 
-    nickForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const h2 = document.createElement('h2');
-        const hijosForm = e.target.children;
-        console.log(hijosForm)
-        h2.innerHTML = `Hola ${hijosForm[1].value.toUpperCase()}, espero estes muy bien!`;
-        mainContainer.appendChild(h2);
-        elegirAgenteFavorito(rolesYAgentes);
-    })
+
+    const hijosForm = evt.target.children;
+
+    if (hijosForm[1].value === '') {
+        mensajeError();
+        return;
+    }
+
+
+
+    const h2 = document.createElement('h2');
+    h2.innerHTML = `Hola ${hijosForm[1].value.toUpperCase()}, espero estes muy bien!`;
+
+    mainContainer.appendChild(h2);
+    infoUser.nick = hijosForm[1].value.toUpperCase();
+    nickForm.reset();
+    elegirAgenteFavorito(rolesYAgentes);
 }
 
+const mensajeError = () => {
+    const p = document.createElement('p');
+    p.textContent = 'NO SE PUEDE INGRESAR UN NICK VACIO';
+    p.classList.add('error');
+    mainContainer.prepend(p);
 
+    setTimeout(() => {
+        p.remove();
+    }, 2500);
+}
+
+nickForm.addEventListener('submit', darBienvenida);
 
 
 
@@ -169,7 +191,6 @@ const analizarRango = rango => {
 
 }
 
-darBienvenida();
 
 
 /* //Comprueba si el equipo participo o no de la ultima Masters, si participo dice su puesto y region
