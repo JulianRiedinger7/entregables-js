@@ -27,7 +27,8 @@ h2{
 }
 
 .contenedor-agente,
-.contenedor-rango{
+.contenedor-rango,
+.contenedor-equipo{
     width: 30%;
     margin: 0 auto;
     border: 2px solid black;
@@ -44,9 +45,18 @@ h2{
 
 }
 
+.contenedor-equipo{
+    width: 70%;
+}
+
 .contenedor-agente img,
 .contenedor-rango img{
     width: 100%;
+}
+
+.grid-container{
+    display: grid;
+    grid-template-columns: repeat(3,1fr);
 }
 
 .error{
@@ -59,11 +69,25 @@ h2{
     border-radius: 5px;
 }
 
+.hidden{
+    display: none;
+}
 
 
 @media screen and (max-width: 768px){
     .contenedor-agente,
-    .contenedor-rango{
-        width: 100%;
+    .contenedor-rango,
+    .contenedor-equipo{
+        width: 90%;
+    }
+
+    .grid-container{
+        grid-template-columns: 1fr;
+    }
+}
+
+@media screen and (min-width: 768px) and (max-width: 1200px){
+    .grid-container{
+        grid-template-columns: 1fr 1fr;
     }
 }
