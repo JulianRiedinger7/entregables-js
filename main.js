@@ -30,7 +30,7 @@ const equiposMasters = [
     { nombre: 'Zeta', puesto: 'Tercero', region: 'Japon' },
     { nombre: 'PaperRex', puesto: 'Cuarto', region: 'Singapur' },
     { nombre: 'G2', puesto: 'Quinto/Sexto', region: 'Europa' },
-    { nombre: 'DRX', puesto: 'Quinto/Sexto', region: 'Coreal del Sur' },
+    { nombre: 'DRX', puesto: 'Quinto/Sexto', region: 'Corea del Sur' },
     { nombre: 'TheGuard', puesto: 'Septimo/Octavo', region: 'Norteamerica' },
     { nombre: 'Liquid', puesto: 'Septimo/Octavo', region: 'Europa' },
     { nombre: 'Nip', puesto: 'Noveno/Decimo', region: 'Brasil' },
@@ -41,14 +41,16 @@ const equiposMasters = [
 
 const mainContainer = document.querySelector('.main-container')
 
-const contenedorAgente = document.createElement('div');
-contenedorAgente.classList.add('contenedor-agente')
+const contenedorAgentes = document.createElement('div');
+contenedorAgentes.classList.add('grid-container');
 
 const contenedorRango = document.createElement('div');
 contenedorRango.classList.add('contenedor-rango');
 
 const contenedorEquipos = document.createElement('div');
 contenedorEquipos.classList.add('grid-container');
+
+const contenedorFavs = document.createElement('div');
 
 const nickForm = document.querySelector('#formulario');
 
@@ -57,9 +59,6 @@ let infoUser = {};
 //Recupera los datos del input text escuchando el evento submit del form, generando una bienvenida.
 const darBienvenida = evt => {
     evt.preventDefault();
-    while (mainContainer.children.length >= 6) { //Si ya hay bienvenida, y el usuario ingresa nuevo nick, remover el anterior
-        document.querySelector('h2').remove();
-    }
     const userNick = evt.target.children[1].value;
 
     if (userNick === '') {
@@ -69,19 +68,17 @@ const darBienvenida = evt => {
         mensajeError('EL NICK ES DEMASIADO LARGO');
         nickForm.reset();
         return;
+    } else {
+        nickForm.classList.add('hidden');
+        const h2 = document.createElement('h2');
+        h2.innerHTML = `Hola ${userNick.toUpperCase()}, espero estes muy bien!`;
+
+        mainContainer.appendChild(h2);
+        infoUser.nick = userNick.toUpperCase();
+        nickForm.reset();
+        mostrarAgentes(rolesYAgentes)
+        elegirRango(rangos);
     }
-
-
-
-    const h2 = document.createElement('h2');
-    h2.innerHTML = `Hola ${userNick.toUpperCase()}, espero estes muy bien!`;
-
-    mainContainer.appendChild(h2);
-    infoUser.nick = userNick.toUpperCase();
-    nickForm.reset();
-    elegirAgenteFavorito(rolesYAgentes);
-    elegirRango(rangos);
-    mostrarEquiposMasters(equiposMasters);
 }
 
 const mensajeError = msg => {
@@ -99,55 +96,41 @@ nickForm.addEventListener('submit', darBienvenida);
 
 
 
-//Crea un select con cada uno de los agentes del array rolesYAgentes para que el usuario elija su favorito
-const elegirAgenteFavorito = rolYagentes => {
-    contenedorAgente.innerHTML = '';
-    const label = document.createElement('label');
-    label.setAttribute('for', 'agentes');
-    label.textContent = "Elije tu agente favorito: "
-    const select = document.createElement('select');
-    select.setAttribute('name', 'agentes');
-    select.innerHTML = `<option>Ninguno</option>`;
-    contenedorAgente.appendChild(label);
+const mostrarAgentes = rolesYAgentes => {
+    contenedorAgentes.innerHTML = '';
+    const titulo = document.createElement('h3');
+    titulo.textContent = 'Elige tu agente favorito 🔥';
+    titulo.classList.add('align-left');
+    mainContainer.appendChild(titulo);
 
-    const soloAgentes = rolYagentes.map(objeto => objeto.agentes);
+    const soloAgentes = rolesYAgentes.map(objeto => objeto.agentes)
     soloAgentes.forEach(agentes => {
         for (const agente of agentes) {
-            select.innerHTML += `<option value="${agente}">${agente}</option>`
+            const agenteInfo = rolesYAgentes.find(objeto => objeto.agentes.includes(agente));
+            const contenedorAgente = document.createElement('div');
+            contenedorAgente.classList.add('contenedor-agente');
+            const nombre = document.createElement('h2');
+            const imagen = document.createElement('img');
+            const parrafo = document.createElement('p');
+            const estrella = document.createElement('a');
+
+            nombre.innerHTML = agente.toUpperCase();
+            imagen.setAttribute('src', `./img/${agente.toLowerCase()}.jpg`);
+            imagen.setAttribute('alt', `${agente}`);
+            parrafo.innerHTML = `<b>${agente}</b> pertenece al rol de <b>${agenteInfo.rol}</b> y su principal tarea es <b>${agenteInfo.tarea}</b>`;
+            estrella.innerHTML = ' ⭐ ';
+            estrella.setAttribute('href', '#');
+            estrella.classList.add('estrella');
+            estrella.addEventListener('click', marcarComoFavorito);
+
+            contenedorAgente.appendChild(nombre);
+            contenedorAgente.appendChild(imagen);
+            contenedorAgente.appendChild(parrafo);
+            contenedorAgente.appendChild(estrella);
+            contenedorAgentes.appendChild(contenedorAgente);
         }
-    });
-
-    contenedorAgente.appendChild(select);
-
-    select.addEventListener('change', (evt) => {
-        contenedorAgente.innerHTML = ''
-        const h2 = document.createElement('h2');
-        const elegido = evt.target.value;
-        h2.innerHTML = `Tu agente favorito es ${elegido}`;
-        contenedorAgente.appendChild(h2);
-        infoUser.agente = elegido;
-        almacenarStorage(infoUser);
-        analizarAgente(elegido);
     })
-
-    mainContainer.appendChild(contenedorAgente);
-
-}
-
-//Analiza el agente elegido con el select, brindando una imagen, su rol y la tarea
-const analizarAgente = agente => {
-    const imagen = document.createElement('img');
-    const parrafo = document.createElement('p');
-
-    const agenteInfo = rolesYAgentes.find(objeto => objeto.agentes.includes(agente));
-
-    imagen.setAttribute('src', `./img/${agente.toLowerCase()}.jpg`);
-    imagen.setAttribute('alt', agente);
-
-    parrafo.innerHTML = `<b>${agente.toUpperCase()}</b> pertenece al rol de <b>${agenteInfo.rol.toUpperCase()}</b> y su principal tarea es ${agenteInfo.tarea}`;
-
-    contenedorAgente.appendChild(imagen);
-    contenedorAgente.appendChild(parrafo);
+    mainContainer.appendChild(contenedorAgentes);
 }
 
 
@@ -173,6 +156,7 @@ const elegirRango = rangos => {
         infoUser.rango = rangoElegido;
         almacenarStorage(infoUser);
         analizarRango(rangoElegido);
+        mostrarEquiposMasters(equiposMasters);
     })
 
     contenedorRango.appendChild(select);
@@ -223,28 +207,112 @@ const analizarRango = rango => {
 
 }
 
+const mostrarEquiposMasters = equipos => {
+    contenedorEquipos.innerHTML = '';
+    const titulo = document.createElement('h3');
+    titulo.textContent = 'Elige tu equipo favorito de la Masters de Reykjavik';
+    titulo.classList.add('align-left');
+    mainContainer.appendChild(titulo);
+    equipos.forEach(equipo => {
+        const contenedorEquipo = document.createElement('div');
+        contenedorEquipo.classList.add('contenedor-equipo');
+        const h2 = document.createElement('h2');
+        const imagen = document.createElement('img');
+        const parrafo = document.createElement('p');
+        const estrella = document.createElement('a');
+
+        h2.innerHTML = `${equipo.nombre.toUpperCase()}`;
+        imagen.setAttribute('src', `./img/equipos/${equipo.nombre.toLowerCase()}.png`);
+        imagen.setAttribute('alt', `${equipo.nombre}`);
+        parrafo.innerHTML = `<b>${equipo.nombre}</b> pertenece a la region de <b>${equipo.region}</b>, y en el torneo quedo en el puesto <b>${equipo.puesto}</b>`;
+        estrella.setAttribute('href', '#');
+        estrella.innerHTML = `⭐`;
+        estrella.classList.add('estrella');
+        estrella.addEventListener('click', marcarComoFavorito)
+
+        contenedorEquipo.appendChild(h2);
+        contenedorEquipo.appendChild(imagen);
+        contenedorEquipo.appendChild(parrafo);
+        contenedorEquipo.appendChild(estrella);
+        contenedorEquipos.appendChild(contenedorEquipo);
+    });
+    mainContainer.appendChild(contenedorEquipos);
+}
+
+const marcarComoFavorito = evt => {
+    evt.preventDefault();
+    const contenedor = evt.target.parentElement;
+
+    const existeAgente = rolesYAgentes.some(objeto => objeto.agentes.some(item => item.toLowerCase() == contenedor.firstElementChild.textContent.toLowerCase()));
+    if (existeAgente && document.getElementsByClassName('favorito').length === 0) {
+        infoUser.agente = contenedor.firstElementChild.textContent;
+        contenedor.classList.add('favorito');
+    } else if (!existeAgente && document.getElementsByClassName('favorito').length === 1) {
+        infoUser.equipo = contenedor.firstElementChild.textContent;
+        contenedor.classList.add('favorito');
+        listaFavoritos(infoUser.agente, infoUser.equipo);
+    } else if (existeAgente && document.getElementsByClassName('favorito').length === 1) {
+        infoUser.agente = contenedor.firstElementChild.textContent;
+        contenedor.classList.toggle('favorito');
+        listaFavoritos(infoUser.agente, infoUser.equipo);
+    } else {
+        contenedor.classList.remove('favorito');
+    }
+
+    almacenarStorage(infoUser);
+}
+
+const listaFavoritos = (agente, equipo) => {
+    contenedorFavs.innerHTML = '';
+    contenedorFavs.classList.add('contenedor-favs');
+
+    const agenteInfo = rolesYAgentes.find(objeto => objeto.agentes.some(item => item.toLowerCase() == agente.toLowerCase()));
+    const equipoInfo = equiposMasters.find(objeto => objeto.nombre.toUpperCase() == equipo);
+
+
+    contenedorFavs.innerHTML = `
+    <h2>🔥 Tus Favoritos 🔥</h2>
+    <div class='contenedor-agente'>
+        <h2>${agente}</h2>
+        <img src='./img/${agente.toLowerCase()}.jpg' alt='${agente}'>
+        <p><b>${agente}</b> pertenece al rol de <b>${agenteInfo.rol}</b> y su principal tarea es <b>${agenteInfo.tarea}</b></p>
+    </div>
+    `;
+
+    contenedorFavs.innerHTML += `
+    <div class='contenedor-equipo'>
+        <h2>${equipo}</h2>
+        <img src='./img/equipos/${equipo.toLowerCase()}.png' alt='${equipo}'}>
+        <p><b>${equipo}</b> pertenece a la region de <b>${equipoInfo.region}</b>, y en el torneo quedo en el puesto <b>${equipoInfo.puesto}</b></p>
+    </div>
+    `;
+    console.log(contenedorRango);
+    contenedorFavs.innerHTML += contenedorRango.outerHTML;
+    mainContainer.appendChild(contenedorFavs);
+
+}
+
 const almacenarStorage = info => {
-    sessionStorage.setItem('infoUser', JSON.stringify(info));
+    localStorage.setItem('infoUser', JSON.stringify(info));
 }
 
 const mostrarStorage = () => {
-    infoUser = JSON.parse(sessionStorage.getItem('infoUser')) || {};
+    infoUser = JSON.parse(localStorage.getItem('infoUser')) || {};
+
     if (Object.keys(infoUser).length > 0) {
         nickForm.classList.add('hidden');
         const bienvenida = document.createElement('h2');
         bienvenida.setAttribute('id', 'bienvenida');
-        const agente = document.createElement('h2');
-        const rango = document.createElement('h2');
+        const agente = infoUser.agente;
+        const equipo = infoUser.equipo;
+        const rango = infoUser.rango;
+        const userRank = document.createElement('h2');
+        userRank.innerHTML = `Tu rango es ${rango}`;
         bienvenida.innerHTML = `Hola ${infoUser.nick}, espero estes muy bien!`;
-        agente.innerHTML = `Tu agente favorito es ${infoUser.agente}`;
-        rango.innerHTML = `Tu rango es ${infoUser.rango}`;
         mainContainer.appendChild(bienvenida);
-        contenedorAgente.appendChild(agente);
-        contenedorRango.appendChild(rango);
-        analizarAgente(infoUser.agente);
-        analizarRango(infoUser.rango);
-        mainContainer.appendChild(contenedorAgente);
-        mainContainer.appendChild(contenedorRango);
+        contenedorRango.appendChild(userRank);
+        analizarRango(rango);
+        listaFavoritos(agente, equipo);
         reIngresar();
     }
 }
@@ -253,17 +321,16 @@ const reIngresar = () => {
     const boton = document.createElement('button');
     const h3 = document.createElement('h3');
     h3.textContent = 'Desea ingresar nueva informacion? 👇🏻'
-    boton.textContent = 'Reingresar';
+    boton.textContent = 'Ingresar';
     mainContainer.appendChild(h3);
     mainContainer.appendChild(boton);
     boton.addEventListener('click', () => {
         nickForm.classList.remove('hidden');
-        sessionStorage.removeItem('infoUser');
-        contenedorAgente.remove();
-        contenedorRango.remove();
+        localStorage.removeItem('infoUser');
         boton.remove();
         h3.remove();
         document.querySelector('#bienvenida').remove();
+        document.querySelector('.contenedor-favs').remove();
     })
 }
 
@@ -272,36 +339,9 @@ document.addEventListener('DOMContentLoaded', () => {
 })
 
 
-const mostrarEquiposMasters = equipos => {
-    contenedorEquipos.innerHTML = '';
-    const titulo = document.createElement('h2');
-    titulo.textContent = 'Elige tu equipo favorito de la Masters de Reykjavik';
-    mainContainer.appendChild(titulo);
-    equipos.forEach(equipo => {
-        const contenedorEquipo = document.createElement('div');
-        contenedorEquipo.classList.add('contenedor-equipo')
-        const h2 = document.createElement('h2');
-        const imagen = document.createElement('img');
-        const parrafo = document.createElement('p');
 
-        h2.innerHTML = `${equipo.nombre.toUpperCase()}`;
-        imagen.setAttribute('src', `./img/equipos/${equipo.nombre.toLowerCase()}.png`);
-        imagen.setAttribute('alt', `${equipo.nombre}`);
-        parrafo.innerHTML = `<b>${equipo.nombre}</b> pertenece a la region de <b>${equipo.region}</b>, y en el torneo quedo en el puesto <b>${equipo.puesto}</b>`;
 
-        contenedorEquipo.appendChild(h2);
-        contenedorEquipo.appendChild(imagen);
-        contenedorEquipo.appendChild(parrafo);
-        contenedorEquipos.appendChild(contenedorEquipo);
-    });
-    mainContainer.appendChild(contenedorEquipos);
-}
 
-/* //Comprueba si el equipo participo o no de la ultima Masters, si participo dice su puesto y region
-const analizarEquipo = user => {
-    
-    let userTeam = equiposMasters.filter(equipo => equipo.nombre.toLowerCase() === user.equipoFav.toLowerCase());
-    if(userTeam.length > 0){
-        parrafo.innerHTML += `Tu equipo favorito es <b>${userTeam[0].nombre.toUpperCase()}</b> y clasifico a la ultima Masters en Reykjavik! <br> La region del equipo es <b>${userTeam[0].region.toUpperCase()}</b> y su puesto en el torneo fue de <b>${userTeam[0].puesto.toUpperCase()}</b>!`
-    } else parrafo.innerHTML += `Tu equipo favorito es <b>${user.equipoFav.toUpperCase()}</b>, y lametablemente no clasifico a la ultima Masters en Reykjavik 😢`
-} */
+
+
+

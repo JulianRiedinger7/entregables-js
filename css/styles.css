@@ -3,6 +3,7 @@
     padding: 0;
 }
 
+
 body{
     color: white;
     font-family: sans-serif;
@@ -22,14 +23,15 @@ p{
     line-height: 1.7;
 }
 
-h2{
+h1,h2,h3{
     padding-top: 1rem;
+    font-family: 'VALORANT', sans-serif;
 }
 
 .contenedor-agente,
 .contenedor-rango,
 .contenedor-equipo{
-    width: 30%;
+    width: 70%;
     margin: 0 auto;
     border: 2px solid black;
     border-radius: 10px;
@@ -45,8 +47,13 @@ h2{
 
 }
 
-.contenedor-equipo{
-    width: 70%;
+.align-left{
+    text-align: left;
+    padding-left: 1rem;
+}
+
+.contenedor-rango{
+    width: 30%;
 }
 
 .contenedor-agente img,
@@ -68,6 +75,18 @@ h2{
     margin-top: 1rem;
     border-radius: 5px;
 }
+
+.estrella{
+    font-size: 1.5rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 1.5s;
+}
+
+.favorito{
+    box-shadow: 0 0 20px 0 yellow;
+}
+
 
 .hidden{
     display: none;
