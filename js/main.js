@@ -25,8 +25,8 @@ btnTheme.addEventListener('click', () => {
 })
 
 document.addEventListener('DOMContentLoaded', () => {
-    mostrarStorage();
     localStorage.getItem('theme') === 'light' ? lightMode() : darkMode();
+    mostrarStorage();
 })
 
 //Recupera los datos del input text escuchando el evento submit del form, generando una bienvenida.
@@ -76,10 +76,10 @@ const mostrarAgentes = rolesYAgentes => {
     titulo.classList.add('align-left');
     mainContainer.appendChild(titulo);
 
-    const soloAgentes = rolesYAgentes.map(objeto => objeto.agentes)
+    const soloAgentes = rolesYAgentes.map(({ agentes }) => agentes);
     soloAgentes.forEach(agentes => {
         for (const agente of agentes) {
-            const agenteInfo = rolesYAgentes.find(objeto => objeto.agentes.includes(agente));
+            const agenteInfo = rolesYAgentes.find(({ agentes }) => agentes.includes(agente));
             const { rol, tarea } = agenteInfo;
             const contenedorAgente = document.createElement('div');
             contenedorAgente.classList.add('contenedor-agente');
@@ -216,7 +216,6 @@ const mostrarEquiposMasters = equipos => {
 const marcarComoFavorito = evt => {
     evt.preventDefault();
     const contenedor = evt.target.parentElement;
-    const existeAgente = rolesYAgentes.some(({ agentes }) => agentes.some(item => item.toLowerCase() == contenedor.firstElementChild.textContent.toLowerCase()));
     if (contenedor.classList.contains('contenedor-agente') && contenedorAgentes.getElementsByClassName('favorito').length === 0) {
         contenedor.classList.add('favorito');
         infoUser.agente = contenedor.firstElementChild.textContent;
@@ -276,17 +275,9 @@ const mostrarStorage = () => {
         nickForm.classList.add('hidden');
         const bienvenida = document.createElement('h2');
         bienvenida.setAttribute('id', 'bienvenida');
-        /* const agente = infoUser?.agente || `No hay agente seleccionado`;
-        const equipo = infoUser?.equipo || `No hay equipo seleccionado`; */
-        const userRank = infoUser?.rango ? `Tu rango es ${infoUser.rango}` : `No hay rango seleccionado`;
         bienvenida.innerHTML = infoUser?.nick ? `Hola ${infoUser.nick}, espero estes muy bien!` : `No hay nick ingresado`;
         mainContainer.appendChild(bienvenida);
-        infoUser?.rango
-            ? analizarRango(infoUser.rango)
-            : bienvenida.innerHTML += `<br> ${userRank}`;
-        /* (infoUser?.agente && infoUser?.equipo)
-            //? listaFavoritos(agente, equipo)
-            : bienvenida.innerHTML += `<br> ${agente} <br> ${equipo}`; */
+        infoUser?.rango ? analizarRango(infoUser.rango) : bienvenida.innerHTML += `<br> No hay rango seleccionado`;
         infoUser?.agente ? listaFavoritos(infoUser) : bienvenida.innerHTML += `<br> No hay agente seleccionado`;
         infoUser?.equipo ? listaFavoritos(infoUser) : bienvenida.innerHTML += `<br> No hay equipo seleccionado`;
         reIngresar();
