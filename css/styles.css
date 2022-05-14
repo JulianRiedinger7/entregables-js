@@ -4,7 +4,8 @@
 }
 
 
-body{
+.dark-body,
+.light-body{
     color: white;
     font-family: sans-serif;
     background-image: url(../img/valorant-bg.png);
@@ -13,6 +14,27 @@ body{
     background-size: cover;
     height: 100vh;
     text-align: center;
+}
+
+.light-body{
+    color: black;
+    background-image: url(../img/valorant-light.webp);
+    background-size: contain;
+}
+
+.dark{
+    color: white;
+    background-color: #0F1822;
+}
+
+.light{
+    background-color: transparent;
+    color: black;
+}
+
+nav{
+    display: flex;
+    justify-content: flex-end;
 }
 
 main{
@@ -36,8 +58,10 @@ h1,h2,h3{
     border: 2px solid black;
     border-radius: 10px;
     background-color: #0F1822;
+    color: white;
     margin-top: 2rem;
     padding:1rem 0 1rem 0;
+    cursor: pointer;
 
     display: flex;
     flex-direction: column;
