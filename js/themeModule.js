@@ -4,7 +4,7 @@ export function lightMode() {
 
     document.body.classList.replace('dark-body', 'light-body');
     mainContainer.classList.replace('dark', 'light');
-    document.querySelector('#btn-theme').textContent = 'DarkMode'
+    document.querySelector('#btn-theme').textContent = '🌙'
     localStorage.setItem('theme', 'light');
 
 }
@@ -13,6 +13,6 @@ export function lightMode() {
 export function darkMode() {
     document.body.classList.replace('light-body', 'dark-body');
     mainContainer.classList.replace('light', 'dark');
-    document.querySelector('#btn-theme').textContent = 'LightMode'
+    document.querySelector('#btn-theme').textContent = '🔆'
     localStorage.setItem('theme', 'dark');
 }

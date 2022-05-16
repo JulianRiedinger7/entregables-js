@@ -8,6 +8,7 @@ contenedorAgentes.classList.add('grid-container');
 
 const contenedorRango = document.createElement('div');
 contenedorRango.classList.add('contenedor-rango');
+contenedorRango.setAttribute('id', 'contenedor-rango');
 
 const contenedorEquipos = document.createElement('div');
 contenedorEquipos.classList.add('grid-container');
@@ -68,7 +69,6 @@ const mensajeError = msg => {
 nickForm.addEventListener('submit', darBienvenida);
 
 
-
 const mostrarAgentes = rolesYAgentes => {
     contenedorAgentes.innerHTML = '';
     const titulo = document.createElement('h3');
@@ -76,33 +76,26 @@ const mostrarAgentes = rolesYAgentes => {
     titulo.classList.add('align-left');
     mainContainer.appendChild(titulo);
 
-    const soloAgentes = rolesYAgentes.map(({ agentes }) => agentes);
-    soloAgentes.forEach(agentes => {
-        for (const agente of agentes) {
-            const agenteInfo = rolesYAgentes.find(({ agentes }) => agentes.includes(agente));
-            const { rol, tarea } = agenteInfo;
-            const contenedorAgente = document.createElement('div');
-            contenedorAgente.classList.add('contenedor-agente');
-            const nombre = document.createElement('h2');
-            const imagen = document.createElement('img');
-            const parrafo = document.createElement('p');
-            const estrella = document.createElement('a');
+    const soloAgentes = rolesYAgentes.map(({ agentes }) => agentes).flat();
+    soloAgentes.forEach(agente => {
+        const contenedorAgente = document.createElement('div');
+        contenedorAgente.classList.add('contenedor-agente');
+        const nombre = document.createElement('h2');
+        const imagen = document.createElement('img');
+        const estrella = document.createElement('a');
 
-            nombre.innerHTML = agente.toUpperCase();
-            imagen.setAttribute('src', `../img/${agente.toLowerCase()}.jpg`);
-            imagen.setAttribute('alt', `${agente}`);
-            parrafo.innerHTML = `<b>${agente}</b> pertenece al rol de <b>${rol}</b> y su principal tarea es <b>${tarea}</b>`;
-            estrella.innerHTML = ' ⭐ ';
-            estrella.setAttribute('href', '#');
-            estrella.classList.add('estrella');
-            estrella.addEventListener('click', marcarComoFavorito);
+        nombre.innerHTML = agente.toUpperCase();
+        imagen.setAttribute('src', `../img/${agente.toLowerCase()}.jpg`);
+        imagen.setAttribute('alt', `${agente}`);
+        estrella.innerHTML = 'Agregar ⭐ ';
+        estrella.setAttribute('href', '#contenedor-rango');
+        estrella.classList.add('estrella');
+        estrella.addEventListener('click', marcarComoFavorito);
 
-            contenedorAgente.appendChild(nombre);
-            contenedorAgente.appendChild(imagen);
-            contenedorAgente.appendChild(parrafo);
-            contenedorAgente.appendChild(estrella);
-            contenedorAgentes.appendChild(contenedorAgente);
-        }
+        contenedorAgente.appendChild(nombre);
+        contenedorAgente.appendChild(imagen);
+        contenedorAgente.appendChild(estrella);
+        contenedorAgentes.appendChild(contenedorAgente);
     })
     mainContainer.appendChild(contenedorAgentes);
 }
@@ -187,26 +180,23 @@ const mostrarEquiposMasters = equipos => {
     titulo.textContent = 'Elige tu equipo favorito de la Masters de Reykjavik';
     titulo.classList.add('align-left');
     mainContainer.appendChild(titulo);
-    equipos.forEach(({ nombre, region, puesto }) => {
+    equipos.forEach(({ nombre }) => {
         const contenedorEquipo = document.createElement('div');
         contenedorEquipo.classList.add('contenedor-equipo');
         const h2 = document.createElement('h2');
         const imagen = document.createElement('img');
-        const parrafo = document.createElement('p');
         const estrella = document.createElement('a');
 
         h2.innerHTML = `${nombre.toUpperCase()}`;
         imagen.setAttribute('src', `../img/equipos/${nombre.toLowerCase()}.png`);
         imagen.setAttribute('alt', `${nombre}`);
-        parrafo.innerHTML = `<b>${nombre}</b> pertenece a la region de <b>${region}</b>, y en el torneo quedo en el puesto <b>${puesto}</b>`;
         estrella.setAttribute('href', '#');
-        estrella.innerHTML = `⭐`;
+        estrella.innerHTML = `Agregar ⭐`;
         estrella.classList.add('estrella');
         estrella.addEventListener('click', marcarComoFavorito)
 
         contenedorEquipo.appendChild(h2);
         contenedorEquipo.appendChild(imagen);
-        contenedorEquipo.appendChild(parrafo);
         contenedorEquipo.appendChild(estrella);
         contenedorEquipos.appendChild(contenedorEquipo);
     });

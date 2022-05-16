@@ -3,6 +3,10 @@
     padding: 0;
 }
 
+html{
+    scroll-behavior: smooth;
+}
+
 
 .dark-body,
 .light-body{
@@ -61,7 +65,6 @@ h1,h2,h3{
     color: white;
     margin-top: 2rem;
     padding:1rem 0 1rem 0;
-    cursor: pointer;
 
     display: flex;
     flex-direction: column;
@@ -100,11 +103,28 @@ h1,h2,h3{
     border-radius: 5px;
 }
 
+#btn-theme{
+    font-size: 1.5rem;
+}
+
 .estrella{
     font-size: 1.5rem;
     text-decoration: none;
     cursor: pointer;
     transition: all 1.5s;
+    color: white;
+    transition: all .7s;
+}
+
+.estrella:hover{
+    color: yellow;
+}
+
+.estrella:active{
+    color: yellow;
+}
+.estrella:focus{
+    color: yellow;
 }
 
 .favorito{
