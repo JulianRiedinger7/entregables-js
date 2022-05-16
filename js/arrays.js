@@ -21,7 +21,17 @@ export const rolesYAgentes = [
     },
 ]
 
-export const rangos = ["Hierro", "Bronce", "Plata", "Oro", "Platino", "Diamante", "Inmortal", "Radiante"];
+export const rangos = [
+    { nombre: 'Hierro', porcentaje: '10.8%' },
+    { nombre: 'Bronce', porcentaje: '24.5%' },
+    { nombre: 'Plata', porcentaje: '28.1%' },
+    { nombre: 'Oro', porcentaje: '19.5%' },
+    { nombre: 'Platino', porcentaje: '9.9%' },
+    { nombre: 'Diamante', porcentaje: '4.9%' },
+    { nombre: 'Inmortal', porcentaje: '2.0%' },
+    { nombre: 'Radiante', porcentaje: '0.03%' },
+
+]
 
 export const equiposMasters = [
     { nombre: 'Optic', puesto: 'Campeon', region: 'Norteamerica' },

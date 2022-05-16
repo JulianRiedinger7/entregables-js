@@ -6,9 +6,9 @@ const mainContainer = document.querySelector('.main-container')
 const contenedorAgentes = document.createElement('div');
 contenedorAgentes.classList.add('grid-container');
 
-const contenedorRango = document.createElement('div');
-contenedorRango.classList.add('contenedor-rango');
-contenedorRango.setAttribute('id', 'contenedor-rango');
+const contenedorRangos = document.createElement('div');
+contenedorRangos.classList.add('grid-container');
+contenedorRangos.setAttribute('id', 'contenedor-rangos');
 
 const contenedorEquipos = document.createElement('div');
 contenedorEquipos.classList.add('grid-container');
@@ -51,7 +51,8 @@ const darBienvenida = evt => {
         infoUser.nick = userNick.toUpperCase();
         nickForm.reset();
         mostrarAgentes(rolesYAgentes)
-        elegirRango(rangos);
+        mostrarRangos(rangos);
+        mostrarEquiposMasters(equiposMasters);
     }
 }
 
@@ -69,6 +70,24 @@ const mensajeError = msg => {
 nickForm.addEventListener('submit', darBienvenida);
 
 
+const crearCard = () => {
+    const titulo = document.createElement('h2');
+    const imagen = document.createElement('img');
+    const estrella = document.createElement('a');
+
+    estrella.setAttribute('href', '');
+    estrella.innerHTML = 'Agregar ⭐ ';
+    estrella.classList.add('estrella');
+    estrella.addEventListener('click', marcarComoFavorito);
+
+    return {
+        titulo,
+        imagen,
+        estrella
+    }
+}
+
+
 const mostrarAgentes = rolesYAgentes => {
     contenedorAgentes.innerHTML = '';
     const titulo = document.createElement('h3');
@@ -80,98 +99,45 @@ const mostrarAgentes = rolesYAgentes => {
     soloAgentes.forEach(agente => {
         const contenedorAgente = document.createElement('div');
         contenedorAgente.classList.add('contenedor-agente');
-        const nombre = document.createElement('h2');
-        const imagen = document.createElement('img');
-        const estrella = document.createElement('a');
+        const objCard = crearCard();
 
-        nombre.innerHTML = agente.toUpperCase();
-        imagen.setAttribute('src', `../img/${agente.toLowerCase()}.jpg`);
-        imagen.setAttribute('alt', `${agente}`);
-        estrella.innerHTML = 'Agregar ⭐ ';
-        estrella.setAttribute('href', '#contenedor-rango');
-        estrella.classList.add('estrella');
-        estrella.addEventListener('click', marcarComoFavorito);
+        objCard.titulo.innerHTML = agente.toUpperCase();
+        objCard.imagen.setAttribute('src', `../img/${agente.toLowerCase()}.jpg`);
+        objCard.imagen.setAttribute('alt', `${agente}`);
 
-        contenedorAgente.appendChild(nombre);
-        contenedorAgente.appendChild(imagen);
-        contenedorAgente.appendChild(estrella);
+
+
+        contenedorAgente.appendChild(objCard.titulo);
+        contenedorAgente.appendChild(objCard.imagen);
+        contenedorAgente.appendChild(objCard.estrella);
         contenedorAgentes.appendChild(contenedorAgente);
     })
     mainContainer.appendChild(contenedorAgentes);
 }
 
 
-const elegirRango = rangos => {
-    contenedorRango.innerHTML = '';
-    const label = document.createElement('label');
-    label.setAttribute('for', 'rangos');
-    label.textContent = 'Elije tu rango: '
-    const select = document.createElement('select');
-    select.setAttribute('name', 'rangos');
-    select.innerHTML = `<option>Ninguno</option>`;
-    contenedorRango.appendChild(label);
-    for (const rango of rangos) {
-        select.innerHTML += `<option value="${rango}">${rango}</option>`
-    }
+const mostrarRangos = rangos => {
+    contenedorRangos.innerHTML = '';
+    const h3 = document.createElement('h3');
+    h3.textContent = 'Selecciona tu rango ';
+    h3.classList.add('align-left');
+    mainContainer.appendChild(h3);
+    rangos.forEach(({ nombre }) => {
+        const contenedorRango = document.createElement('div');
+        contenedorRango.classList.add('contenedor-rango');
+        const objCard = crearCard();
 
-    select.addEventListener('change', (evt) => {
-        contenedorRango.innerHTML = '';
-        const h2 = document.createElement('h2');
-        const rangoElegido = evt.target.value
-        h2.innerHTML = `Tu rango es ${rangoElegido}`;
-        contenedorRango.appendChild(h2);
-        infoUser.rango = rangoElegido;
-        almacenarStorage(infoUser);
-        analizarRango(rangoElegido);
-        mostrarEquiposMasters(equiposMasters);
+        objCard.titulo.innerHTML = `${nombre.toUpperCase()}`;
+        objCard.imagen.setAttribute('src', `../img/rangos/${nombre.toLowerCase()}.webp`);
+        objCard.imagen.setAttribute('alt', `${nombre}`);
+
+        contenedorRango.appendChild(objCard.titulo);
+        contenedorRango.appendChild(objCard.imagen);
+        contenedorRango.appendChild(objCard.estrella);
+        contenedorRangos.appendChild(contenedorRango);
+
     })
-
-    contenedorRango.appendChild(select);
-    mainContainer.appendChild(contenedorRango);
-
-}
-
-
-const analizarRango = rango => {
-    const imagen = document.createElement('img');
-    const parrafo = document.createElement('p');
-
-    imagen.setAttribute('src', `../img/${rango.toLowerCase()}.jpg`);
-    imagen.setAttribute('alt', rango);
-
-    switch (rango) {
-        case 'Hierro':
-            parrafo.textContent = 'Estas en el rango mas bajo del juego, te recomiendo guias para mejorar';
-            break;
-        case 'Bronce':
-            parrafo.textContent = 'Estas en un rango bajo, tenes que seguir practicando';
-            break;
-        case 'Plata':
-            parrafo.textContent = 'Estas mejorando, tenes que seguir asi';
-            break;
-        case 'Oro':
-            parrafo.textContent = 'Estas en un rango intermedio, segui practicando tu punteria';
-            break;
-        case 'Platino':
-            parrafo.textContent = 'Estas por encima del promedio, segui asi';
-            break;
-        case 'Diamante':
-            parrafo.textContent = 'Estas en un rango alto, tu habilidad es muy buena';
-            break;
-        case 'Inmortal':
-            parrafo.textContent = 'Estas por llegar al rango mas alto, tenes mucha habilidad';
-            break;
-        case 'Radiante':
-            parrafo.textContent = 'Estas en el rango mas alto del juego, podes competir profesionalmente';
-            break;
-        default:
-            parrafo.textContent = 'Tienes que elegir un rango';
-            break;
-    }
-
-    contenedorRango.appendChild(imagen);
-    contenedorRango.appendChild(parrafo);
-
+    mainContainer.appendChild(contenedorRangos);
 }
 
 const mostrarEquiposMasters = equipos => {
@@ -183,21 +149,15 @@ const mostrarEquiposMasters = equipos => {
     equipos.forEach(({ nombre }) => {
         const contenedorEquipo = document.createElement('div');
         contenedorEquipo.classList.add('contenedor-equipo');
-        const h2 = document.createElement('h2');
-        const imagen = document.createElement('img');
-        const estrella = document.createElement('a');
+        const objCard = crearCard();
 
-        h2.innerHTML = `${nombre.toUpperCase()}`;
-        imagen.setAttribute('src', `../img/equipos/${nombre.toLowerCase()}.png`);
-        imagen.setAttribute('alt', `${nombre}`);
-        estrella.setAttribute('href', '#');
-        estrella.innerHTML = `Agregar ⭐`;
-        estrella.classList.add('estrella');
-        estrella.addEventListener('click', marcarComoFavorito)
+        objCard.titulo.innerHTML = `${nombre.toUpperCase()}`;
+        objCard.imagen.setAttribute('src', `../img/equipos/${nombre.toLowerCase()}.png`);
+        objCard.imagen.setAttribute('alt', `${nombre}`);
 
-        contenedorEquipo.appendChild(h2);
-        contenedorEquipo.appendChild(imagen);
-        contenedorEquipo.appendChild(estrella);
+        contenedorEquipo.appendChild(objCard.titulo);
+        contenedorEquipo.appendChild(objCard.imagen);
+        contenedorEquipo.appendChild(objCard.estrella);
         contenedorEquipos.appendChild(contenedorEquipo);
     });
     mainContainer.appendChild(contenedorEquipos);
@@ -208,24 +168,33 @@ const marcarComoFavorito = evt => {
     const contenedor = evt.target.parentElement;
     if (contenedor.classList.contains('contenedor-agente') && contenedorAgentes.getElementsByClassName('favorito').length === 0) {
         contenedor.classList.add('favorito');
+        contenedor.getElementsByClassName('estrella')[0].innerHTML = `Quitar ❌`;
         infoUser.agente = contenedor.firstElementChild.textContent;
+    } else if (contenedor.classList.contains('contenedor-rango') && contenedorRangos.getElementsByClassName('favorito').length === 0) {
+        contenedor.classList.add('favorito');
+        contenedor.getElementsByClassName('estrella')[0].innerHTML = `Quitar ❌`;
+        infoUser.rango = contenedor.firstElementChild.textContent;
+        listaFavoritos(infoUser);
     } else if (contenedor.classList.contains('contenedor-equipo') && contenedorEquipos.getElementsByClassName('favorito').length === 0) {
         contenedor.classList.add('favorito');
+        contenedor.getElementsByClassName('estrella')[0].innerHTML = `Quitar ❌`;
         infoUser.equipo = contenedor.firstElementChild.textContent;
         listaFavoritos(infoUser);
     } else {
         contenedor.classList.remove('favorito');
+        contenedor.getElementsByClassName('estrella')[0].innerHTML = `Agregar ⭐`;
     }
 
     almacenarStorage(infoUser);
 }
 
-const listaFavoritos = ({ agente, equipo }) => {
+const listaFavoritos = ({ agente, rango, equipo }) => {
     contenedorFavs.innerHTML = '';
     contenedorFavs.classList.add('contenedor-favs');
 
     const agenteInfo = rolesYAgentes.find(({ agentes }) => agentes.some(item => item.toUpperCase() == agente));
     const equipoInfo = equiposMasters.find(({ nombre }) => nombre.toUpperCase() == equipo);
+    const rangoInfo = rangos.find(({ nombre }) => nombre.toUpperCase() === rango)
 
     if (agenteInfo) {
         contenedorFavs.innerHTML = `
@@ -249,7 +218,15 @@ const listaFavoritos = ({ agente, equipo }) => {
     `;
     }
 
-    contenedorRango.children.length && (contenedorFavs.innerHTML += contenedorRango.outerHTML);
+    if (rangoInfo) {
+        contenedorFavs.innerHTML += `
+    <div class='contenedor-rango'>
+        <h2>${rango}</h2>
+        <img src='../img/rangos/${rango.toLowerCase()}.webp' alt='${rango}'}>
+        <p>Estas en el rango de <b>${rango}</b>, donde se encuentra el <b>${rangoInfo.porcentaje}</b> de jugadores</p>
+    </div>
+    `;
+    }
     mainContainer.appendChild(contenedorFavs);
 
 }
@@ -267,7 +244,7 @@ const mostrarStorage = () => {
         bienvenida.setAttribute('id', 'bienvenida');
         bienvenida.innerHTML = infoUser?.nick ? `Hola ${infoUser.nick}, espero estes muy bien!` : `No hay nick ingresado`;
         mainContainer.appendChild(bienvenida);
-        infoUser?.rango ? analizarRango(infoUser.rango) : bienvenida.innerHTML += `<br> No hay rango seleccionado`;
+        infoUser?.rango ? listaFavoritos(infoUser) : bienvenida.innerHTML += `<br> No hay rango seleccionado`;
         infoUser?.agente ? listaFavoritos(infoUser) : bienvenida.innerHTML += `<br> No hay agente seleccionado`;
         infoUser?.equipo ? listaFavoritos(infoUser) : bienvenida.innerHTML += `<br> No hay equipo seleccionado`;
         reIngresar();

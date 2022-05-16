@@ -74,17 +74,20 @@ h1,h2,h3{
 
 }
 
+.contenedor-favs div{
+    max-width: 700px;
+    margin: 0 auto;
+    margin-bottom: 1rem;
+    margin-top: 1rem;
+}
+
 .align-left{
     text-align: left;
     padding-left: 1rem;
 }
 
-.contenedor-rango{
-    width: 30%;
-}
 
-.contenedor-agente img,
-.contenedor-rango img{
+.contenedor-agente img{
     width: 100%;
 }
 
