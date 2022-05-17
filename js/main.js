@@ -21,14 +21,21 @@ let infoUser = {};
 
 const btnTheme = document.querySelector('#btn-theme');
 
-btnTheme.addEventListener('click', () => {
-    localStorage.getItem('theme') === 'light' ? darkMode() : lightMode();
-})
-
 document.addEventListener('DOMContentLoaded', () => {
     localStorage.getItem('theme') === 'light' ? lightMode() : darkMode();
     mostrarStorage();
 })
+
+window.addEventListener('load', () => {
+    document.body.classList.remove('no-scrollable');
+    document.querySelector('.lds-ring').remove();
+})
+
+btnTheme.addEventListener('click', () => {
+    localStorage.getItem('theme') === 'light' ? darkMode() : lightMode();
+})
+
+
 
 //Recupera los datos del input text escuchando el evento submit del form, generando una bienvenida.
 const darBienvenida = evt => {
@@ -75,7 +82,7 @@ const crearCard = () => {
     const imagen = document.createElement('img');
     const estrella = document.createElement('a');
 
-    estrella.setAttribute('href', '');
+    estrella.setAttribute('href', '#contenedor-rangos');
     estrella.innerHTML = 'Agregar ⭐ ';
     estrella.classList.add('estrella');
     estrella.addEventListener('click', marcarComoFavorito);
@@ -87,7 +94,7 @@ const crearCard = () => {
     }
 }
 
-
+//Muestra todos los agentes del array a partir de la funcion crearCard
 const mostrarAgentes = rolesYAgentes => {
     contenedorAgentes.innerHTML = '';
     const titulo = document.createElement('h3');
@@ -99,23 +106,21 @@ const mostrarAgentes = rolesYAgentes => {
     soloAgentes.forEach(agente => {
         const contenedorAgente = document.createElement('div');
         contenedorAgente.classList.add('contenedor-agente');
-        const objCard = crearCard();
+        const { titulo, imagen, estrella } = crearCard();
 
-        objCard.titulo.innerHTML = agente.toUpperCase();
-        objCard.imagen.setAttribute('src', `../img/${agente.toLowerCase()}.jpg`);
-        objCard.imagen.setAttribute('alt', `${agente}`);
+        titulo.innerHTML = agente.toUpperCase();
+        imagen.setAttribute('src', `../img/${agente.toLowerCase()}.jpg`);
+        imagen.setAttribute('alt', `${agente}`);
 
-
-
-        contenedorAgente.appendChild(objCard.titulo);
-        contenedorAgente.appendChild(objCard.imagen);
-        contenedorAgente.appendChild(objCard.estrella);
+        contenedorAgente.appendChild(titulo);
+        contenedorAgente.appendChild(imagen);
+        contenedorAgente.appendChild(estrella);
         contenedorAgentes.appendChild(contenedorAgente);
     })
     mainContainer.appendChild(contenedorAgentes);
 }
 
-
+//Muestra todos los rangos del array a partir de la funcion crearCard
 const mostrarRangos = rangos => {
     contenedorRangos.innerHTML = '';
     const h3 = document.createElement('h3');
@@ -125,21 +130,23 @@ const mostrarRangos = rangos => {
     rangos.forEach(({ nombre }) => {
         const contenedorRango = document.createElement('div');
         contenedorRango.classList.add('contenedor-rango');
-        const objCard = crearCard();
+        const { titulo, imagen, estrella } = crearCard();
 
-        objCard.titulo.innerHTML = `${nombre.toUpperCase()}`;
-        objCard.imagen.setAttribute('src', `../img/rangos/${nombre.toLowerCase()}.webp`);
-        objCard.imagen.setAttribute('alt', `${nombre}`);
+        titulo.innerHTML = `${nombre.toUpperCase()}`;
+        imagen.setAttribute('src', `../img/rangos/${nombre.toLowerCase()}.webp`);
+        imagen.setAttribute('alt', `${nombre}`);
 
-        contenedorRango.appendChild(objCard.titulo);
-        contenedorRango.appendChild(objCard.imagen);
-        contenedorRango.appendChild(objCard.estrella);
+        contenedorRango.appendChild(titulo);
+        contenedorRango.appendChild(imagen);
+        contenedorRango.appendChild(estrella);
         contenedorRangos.appendChild(contenedorRango);
 
     })
     mainContainer.appendChild(contenedorRangos);
 }
 
+
+//Muestra todos los equipos del array a partir de la funcion crearCard
 const mostrarEquiposMasters = equipos => {
     contenedorEquipos.innerHTML = '';
     const titulo = document.createElement('h3');
@@ -149,20 +156,23 @@ const mostrarEquiposMasters = equipos => {
     equipos.forEach(({ nombre }) => {
         const contenedorEquipo = document.createElement('div');
         contenedorEquipo.classList.add('contenedor-equipo');
-        const objCard = crearCard();
+        const { titulo, imagen, estrella } = crearCard();
 
-        objCard.titulo.innerHTML = `${nombre.toUpperCase()}`;
-        objCard.imagen.setAttribute('src', `../img/equipos/${nombre.toLowerCase()}.png`);
-        objCard.imagen.setAttribute('alt', `${nombre}`);
+        titulo.innerHTML = `${nombre.toUpperCase()}`;
+        imagen.setAttribute('src', `../img/equipos/${nombre.toLowerCase()}.png`);
+        imagen.setAttribute('alt', `${nombre}`);
 
-        contenedorEquipo.appendChild(objCard.titulo);
-        contenedorEquipo.appendChild(objCard.imagen);
-        contenedorEquipo.appendChild(objCard.estrella);
+        contenedorEquipo.appendChild(titulo);
+        contenedorEquipo.appendChild(imagen);
+        contenedorEquipo.appendChild(estrella);
         contenedorEquipos.appendChild(contenedorEquipo);
     });
     mainContainer.appendChild(contenedorEquipos);
 }
 
+
+//Si el contenedor clickeado no tiene la clase favorito, lo agrega como uno, pasando la info al storage, y sino lo quita
+//Si se intenta agregar otro contenedor mientras ya hay uno como favorito de la misma clase, se lanza el error de SweetAlert
 const marcarComoFavorito = evt => {
     evt.preventDefault();
     const contenedor = evt.target.parentElement;
@@ -170,6 +180,7 @@ const marcarComoFavorito = evt => {
         contenedor.classList.add('favorito');
         contenedor.getElementsByClassName('estrella')[0].innerHTML = `Quitar ❌`;
         infoUser.agente = contenedor.firstElementChild.textContent;
+        listaFavoritos(infoUser);
     } else if (contenedor.classList.contains('contenedor-rango') && contenedorRangos.getElementsByClassName('favorito').length === 0) {
         contenedor.classList.add('favorito');
         contenedor.getElementsByClassName('estrella')[0].innerHTML = `Quitar ❌`;
@@ -180,6 +191,13 @@ const marcarComoFavorito = evt => {
         contenedor.getElementsByClassName('estrella')[0].innerHTML = `Quitar ❌`;
         infoUser.equipo = contenedor.firstElementChild.textContent;
         listaFavoritos(infoUser);
+    } else if ((contenedorAgentes.getElementsByClassName('favorito').length === 1 || contenedorRangos.getElementsByClassName('favorito').length === 1 || contenedorEquipos.getElementsByClassName('favorito').length === 1) && !contenedor.classList.contains('favorito')) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: `Primero debes quitar tu seleccion de ${contenedor.parentElement.getElementsByClassName('favorito')[0].firstElementChild.textContent}!`,
+            backdrop: `rgba(0,0,0,0.7)`
+        })
     } else {
         contenedor.classList.remove('favorito');
         contenedor.getElementsByClassName('estrella')[0].innerHTML = `Agregar ⭐`;
@@ -188,12 +206,14 @@ const marcarComoFavorito = evt => {
     almacenarStorage(infoUser);
 }
 
+
+//Genera la lista con los contenedores agregados a favoritos, o con la informacion recuperada del localStorage
 const listaFavoritos = ({ agente, rango, equipo }) => {
     contenedorFavs.innerHTML = '';
     contenedorFavs.classList.add('contenedor-favs');
 
-    const agenteInfo = rolesYAgentes.find(({ agentes }) => agentes.some(item => item.toUpperCase() == agente));
-    const equipoInfo = equiposMasters.find(({ nombre }) => nombre.toUpperCase() == equipo);
+    const agenteInfo = rolesYAgentes.find(({ agentes }) => agentes.some(item => item.toUpperCase() === agente));
+    const equipoInfo = equiposMasters.find(({ nombre }) => nombre.toUpperCase() === equipo);
     const rangoInfo = rangos.find(({ nombre }) => nombre.toUpperCase() === rango)
 
     if (agenteInfo) {
@@ -251,6 +271,8 @@ const mostrarStorage = () => {
     }
 }
 
+
+//Se pregunta si realmente quiere borrar la info, en caso afirmativo se eliminan los datos del localStorage
 const reIngresar = () => {
     const boton = document.createElement('button');
     const h3 = document.createElement('h3');
@@ -259,14 +281,33 @@ const reIngresar = () => {
     mainContainer.appendChild(h3);
     mainContainer.appendChild(boton);
     boton.addEventListener('click', () => {
-        nickForm.classList.remove('hidden');
-        localStorage.removeItem('infoUser');
-        boton.remove();
-        h3.remove();
-        document.querySelector('#bienvenida').remove();
-        document.querySelector('.contenedor-favs') && document.querySelector('.contenedor-favs').remove();
+        Swal.fire({
+            title: 'Estas seguro?',
+            text: "No vas a poder revertirlo!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, eliminar!',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Swal.fire(
+                    'Borrado!',
+                    'La informacion ha sido eliminada.',
+                    'success'
+                )
+                nickForm.classList.remove('hidden');
+                localStorage.removeItem('infoUser');
+                boton.remove();
+                h3.remove();
+                document.querySelector('#bienvenida').remove();
+                document.querySelector('.contenedor-favs') && document.querySelector('.contenedor-favs').remove();
+            }
+        })
     })
 }
+
 
 
 
