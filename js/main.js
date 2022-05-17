@@ -109,7 +109,7 @@ const mostrarAgentes = rolesYAgentes => {
         const { titulo, imagen, estrella } = crearCard();
 
         titulo.innerHTML = agente.toUpperCase();
-        imagen.setAttribute('src', `../img/${agente.toLowerCase()}.jpg`);
+        imagen.setAttribute('src', `./img/${agente.toLowerCase()}.jpg`);
         imagen.setAttribute('alt', `${agente}`);
 
         contenedorAgente.appendChild(titulo);
@@ -133,7 +133,7 @@ const mostrarRangos = rangos => {
         const { titulo, imagen, estrella } = crearCard();
 
         titulo.innerHTML = `${nombre.toUpperCase()}`;
-        imagen.setAttribute('src', `../img/rangos/${nombre.toLowerCase()}.webp`);
+        imagen.setAttribute('src', `./img/rangos/${nombre.toLowerCase()}.webp`);
         imagen.setAttribute('alt', `${nombre}`);
 
         contenedorRango.appendChild(titulo);
@@ -159,7 +159,7 @@ const mostrarEquiposMasters = equipos => {
         const { titulo, imagen, estrella } = crearCard();
 
         titulo.innerHTML = `${nombre.toUpperCase()}`;
-        imagen.setAttribute('src', `../img/equipos/${nombre.toLowerCase()}.png`);
+        imagen.setAttribute('src', `./img/equipos/${nombre.toLowerCase()}.png`);
         imagen.setAttribute('alt', `${nombre}`);
 
         contenedorEquipo.appendChild(titulo);
@@ -221,7 +221,7 @@ const listaFavoritos = ({ agente, rango, equipo }) => {
     <h2>🔥 Tus Favoritos 🔥</h2>
     <div class='contenedor-agente'>
         <h2>${agente}</h2>
-        <img src='../img/${agente.toLowerCase()}.jpg' alt='${agente}'>
+        <img src='./img/${agente.toLowerCase()}.jpg' alt='${agente}'>
         <p><b>${agente}</b> pertenece al rol de <b>${agenteInfo.rol}</b> y su principal tarea es <b>${agenteInfo.tarea}</b></p>
     </div>
     `;
@@ -232,7 +232,7 @@ const listaFavoritos = ({ agente, rango, equipo }) => {
         contenedorFavs.innerHTML += `
     <div class='contenedor-equipo'>
         <h2>${equipo}</h2>
-        <img src='../img/equipos/${equipo.toLowerCase()}.png' alt='${equipo}'}>
+        <img src='./img/equipos/${equipo.toLowerCase()}.png' alt='${equipo}'}>
         <p><b>${equipo}</b> pertenece a la region de <b>${equipoInfo.region}</b>, y en el torneo quedo en el puesto <b>${equipoInfo.puesto}</b></p>
     </div>
     `;
@@ -242,7 +242,7 @@ const listaFavoritos = ({ agente, rango, equipo }) => {
         contenedorFavs.innerHTML += `
     <div class='contenedor-rango'>
         <h2>${rango}</h2>
-        <img src='../img/rangos/${rango.toLowerCase()}.webp' alt='${rango}'}>
+        <img src='./img/rangos/${rango.toLowerCase()}.webp' alt='${rango}'}>
         <p>Estas en el rango de <b>${rango}</b>, donde se encuentra el <b>${rangoInfo.porcentaje}</b> de jugadores</p>
     </div>
     `;
