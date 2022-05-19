@@ -262,7 +262,7 @@ const mostrarStorage = () => {
         nickForm.classList.add('hidden');
         const bienvenida = document.createElement('h2');
         bienvenida.setAttribute('id', 'bienvenida');
-        bienvenida.innerHTML = infoUser?.nick ? `Hola ${infoUser.nick}, espero estes muy bien!` : `No hay nick ingresado`;
+        bienvenida.innerHTML = infoUser?.nick ? `Bienvenido de nuevo ${infoUser.nick}!` : `No hay nick ingresado`;
         mainContainer.appendChild(bienvenida);
         infoUser?.rango ? listaFavoritos(infoUser) : bienvenida.innerHTML += `<br> No hay rango seleccionado`;
         infoUser?.agente ? listaFavoritos(infoUser) : bienvenida.innerHTML += `<br> No hay agente seleccionado`;
