@@ -42,13 +42,13 @@ const darBienvenida = evt => {
     evt.preventDefault();
     const userNick = evt.target.children[1].value;
 
-    if (userNick === '') {
-        mensajeError('NO SE PUEDE INGRESAR UN NICK VACIO');
-        return;
-    } else if (userNick.length > 20) {
-        mensajeError('EL NICK ES DEMASIADO LARGO');
+    if (userNick === '' || userNick.length > 20) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Oops...',
+            text: 'Ingresa nuevamente un nick!',
+        })
         nickForm.reset();
-        return;
     } else {
         nickForm.classList.add('hidden');
         const h2 = document.createElement('h2');
@@ -63,7 +63,7 @@ const darBienvenida = evt => {
     }
 }
 
-const mensajeError = msg => {
+/* const mensajeError = msg => {
     const p = document.createElement('p');
     p.textContent = msg;
     p.classList.add('error');
@@ -72,7 +72,7 @@ const mensajeError = msg => {
     setTimeout(() => {
         p.remove();
     }, 2500);
-}
+} */
 
 nickForm.addEventListener('submit', darBienvenida);
 
