@@ -171,27 +171,30 @@ const mostrarEquiposMasters = equipos => {
 }
 
 
+const countFavoriteContainer = container => container.getElementsByClassName('favorito').length;
+
 //Si el contenedor clickeado no tiene la clase favorito, lo agrega como uno, pasando la info al storage, y sino lo quita
 //Si se intenta agregar otro contenedor mientras ya hay uno como favorito de la misma clase, se lanza el error de SweetAlert
+
 const marcarComoFavorito = evt => {
     evt.preventDefault();
     const contenedor = evt.target.parentElement;
-    if (contenedor.classList.contains('contenedor-agente') && contenedorAgentes.getElementsByClassName('favorito').length === 0) {
+    if (contenedor.classList.contains('contenedor-agente') && countFavoriteContainer(contenedorAgentes) === 0) {
         contenedor.classList.add('favorito');
         contenedor.getElementsByClassName('estrella')[0].innerHTML = `Quitar ❌`;
         infoUser.agente = contenedor.firstElementChild.textContent;
         listaFavoritos(infoUser);
-    } else if (contenedor.classList.contains('contenedor-rango') && contenedorRangos.getElementsByClassName('favorito').length === 0) {
+    } else if (contenedor.classList.contains('contenedor-rango') && countFavoriteContainer(contenedorRangos) === 0) {
         contenedor.classList.add('favorito');
         contenedor.getElementsByClassName('estrella')[0].innerHTML = `Quitar ❌`;
         infoUser.rango = contenedor.firstElementChild.textContent;
         listaFavoritos(infoUser);
-    } else if (contenedor.classList.contains('contenedor-equipo') && contenedorEquipos.getElementsByClassName('favorito').length === 0) {
+    } else if (contenedor.classList.contains('contenedor-equipo') && countFavoriteContainer(contenedorEquipos) === 0) {
         contenedor.classList.add('favorito');
         contenedor.getElementsByClassName('estrella')[0].innerHTML = `Quitar ❌`;
         infoUser.equipo = contenedor.firstElementChild.textContent;
         listaFavoritos(infoUser);
-    } else if ((contenedorAgentes.getElementsByClassName('favorito').length === 1 || contenedorRangos.getElementsByClassName('favorito').length === 1 || contenedorEquipos.getElementsByClassName('favorito').length === 1) && !contenedor.classList.contains('favorito')) {
+    } else if ((countFavoriteContainer(contenedorAgentes) === 1 || countFavoriteContainer(contenedorRangos) === 1 || countFavoriteContainer(contenedorEquipos) === 1) && !contenedor.classList.contains('favorito')) {
         Swal.fire({
             icon: 'error',
             title: 'Oops...',
