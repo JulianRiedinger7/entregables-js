@@ -1,11 +1,11 @@
 const assets = [
 	'/',
-	'/index.html',
+	'index.html',
 	'css/styles.css',
-	'/js/main.js',
-	'/js/arrays.js',
-	'/js/themeModule.js',
-	'/img',
+	'js/main.js',
+	'js/arrays.js',
+	'js/themeModule.js',
+	'img',
 ];
 
 //Instalacion
