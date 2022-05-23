@@ -5,12 +5,16 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#0F1822">
     <title>ValorantInfo</title>
     <link rel="shortcut icon" href="./img/valorant-logo.png" type="image/x-icon">
     <!-- Valorant Font -->
     <link href="http://fonts.cdnfonts.com/css/valorant" rel="stylesheet">
     <!-- CSS -->
     <link rel="stylesheet" href="./css/styles.css">
+    <!-- Manifest -->
+    <link rel="manifest" href="./manifest.json">
+    <link rel="apple-touch-icon" href="./img/icons/icon-512x512.png">
 </head>
 
 <body class="dark-body no-scrollable">
@@ -47,6 +51,11 @@
 
     <script src="./js/main.js" type="module"></script>
     <script src="//cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('./sw.js')
+        }
+    </script>
 
 </body>
 
