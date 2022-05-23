@@ -6,6 +6,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ValorantInfo</title>
+    <link rel="shortcut icon" href="./img/valorant-logo.png" type="image/x-icon">
     <!-- Valorant Font -->
     <link href="http://fonts.cdnfonts.com/css/valorant" rel="stylesheet">
     <!-- CSS -->
@@ -22,15 +23,25 @@
 
     <header>
         <nav>
-            <button id="btn-theme">🌙</button>
+            <div class="logo-container">
+                <a href="#">
+                    <img src="./img/valorant-logo.png" alt="valorant logo">
+                </a>
+            </div>
+            <div>
+                <a id="btn-theme">🌙</a>
+            </div>
         </nav>
     </header>
+
     <main class="main-container dark">
         <h1>Bienvenido a ValorantInfo</h1>
         <form action="" id="formulario" autocomplete="off">
             <label for="fnick">Ingresa Tu Nick en Valorant</label>
-            <input type="text" id="fnick">
-            <input type="submit" value="Aceptar">
+            <div>
+                <input type="text" id="fnick" placeholder="Nickname...">
+                <input type="submit" value="Aceptar" class="btn">
+            </div>
         </form>
     </main>
 
