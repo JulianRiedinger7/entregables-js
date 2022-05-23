@@ -5,6 +5,7 @@ const assets = [
 	'/js/main.js',
 	'/js/arrays.js',
 	'/js/themeModule.js',
+	'/images',
 ];
 
 //Instalacion
