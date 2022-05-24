@@ -1,3 +1,7 @@
+@import url(https://db.onlinewebfonts.com/c/e7322a6673613ab13604fadda3d20e56?family=VALORANT);
+
+@font-face {font-family: "VALORANT"; src: url("//db.onlinewebfonts.com/t/e7322a6673613ab13604fadda3d20e56.eot"); src: url("//db.onlinewebfonts.com/t/e7322a6673613ab13604fadda3d20e56.eot?#iefix") format("embedded-opentype"), url("//db.onlinewebfonts.com/t/e7322a6673613ab13604fadda3d20e56.woff2") format("woff2"), url("//db.onlinewebfonts.com/t/e7322a6673613ab13604fadda3d20e56.woff") format("woff"), url("//db.onlinewebfonts.com/t/e7322a6673613ab13604fadda3d20e56.ttf") format("truetype"), url("//db.onlinewebfonts.com/t/e7322a6673613ab13604fadda3d20e56.svg#VALORANT") format("svg"); }
+
 * {
   margin: 0;
   padding: 0;
@@ -10,7 +14,7 @@ html {
 .dark-body,
 .light-body {
   color: white;
-  font-family: sans-serif;
+  font-family: 'VALORANT', sans-serif;
   background-image: url(../img/valorant-bg.png);
   background-position: center center;
   background-repeat: no-repeat;
@@ -64,7 +68,6 @@ h1,
 h2,
 h3 {
   padding-top: 1rem;
-  font-family: "VALORANT", sans-serif;
 }
 
 form {
