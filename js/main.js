@@ -1,5 +1,13 @@
-import { rolesYAgentes, rangos, equiposMasters } from './arrays.js';
+import {
+	rolesYAgentes,
+	rangos,
+	equiposMasters,
+	valorantPoints,
+} from './arrays.js';
+import { URL_VP, fetchApi, precioVentaOficial } from './fetchApi.js';
 import { lightMode, darkMode } from './themeModule.js';
+
+document.body.scrollIntoView(false);
 
 const mainContainer = document.querySelector('.main-container');
 
@@ -16,6 +24,12 @@ contenedorEquipos.classList.add('grid-container');
 const contenedorFavs = document.createElement('div');
 
 const nickForm = document.querySelector('#formulario');
+
+const IMP_ARG = 1.66;
+
+//vp = valorant points
+const vpContainer = document.createElement('div');
+vpContainer.classList.add('grid-container');
 
 let infoUser = {};
 
@@ -55,22 +69,34 @@ const darBienvenida = (evt) => {
 		mainContainer.appendChild(h2);
 		infoUser.nick = userNick.toUpperCase();
 		nickForm.reset();
-		mostrarAgentes(rolesYAgentes);
-		mostrarRangos(rangos);
-		mostrarEquiposMasters(equiposMasters);
+		decidirCamino();
 	}
 };
 
-/* const mensajeError = msg => {
-    const p = document.createElement('p');
-    p.textContent = msg;
-    p.classList.add('error');
-    mainContainer.prepend(p);
+const decidirCamino = () => {
+	mainContainer.innerHTML += `
+		<div class='flex-container'>
+			<h3>Que deseas hacer? 🤔</h3>
+			<button class='btn' id='btnInfo'>Informacion</button>
+			<button class='btn' id='btnVP'>Conversion VP</button>
+		</div>
+	`;
 
-    setTimeout(() => {
-        p.remove();
-    }, 2500);
-} */
+	const btnInfo = document.querySelector('#btnInfo');
+	const btnVP = document.querySelector('#btnVP');
+
+	btnInfo.addEventListener('click', () => {
+		document.querySelector('.flex-container').remove();
+		mostrarAgentes(rolesYAgentes);
+		mostrarRangos(rangos);
+		mostrarEquiposMasters(equiposMasters);
+	});
+
+	btnVP.addEventListener('click', () => {
+		document.querySelector('.flex-container').remove();
+		mostrarVP(valorantPoints);
+	});
+};
 
 nickForm.addEventListener('submit', darBienvenida);
 
@@ -333,4 +359,74 @@ const reIngresar = () => {
 			}
 		});
 	});
+};
+
+const mostrarVP = async (valorantPoints) => {
+	const vp = await fetchApi(URL_VP);
+	mainContainer.innerHTML += `<h3 class='align-left'>Elige la cantidad de VP para convertir a $ARS</h3>`;
+	const { data } = vp;
+	const { largeIcon } = data;
+	valorantPoints.forEach(({ cantidad, precio }) => {
+		vpContainer.innerHTML += `
+			<div class='contenedor-vp'>
+				<h2>${cantidad}</h2>
+				<img src='${largeIcon}'>
+				<h3>$${precio} USD</h3>
+				<a href='#' class='estrella'>Seleccionar ✅</a>
+			</div>
+		`;
+	});
+
+	mainContainer.appendChild(vpContainer);
+	const btnsSeleccionar = document.querySelectorAll('.estrella');
+	btnsSeleccionar.forEach((btn) => {
+		btn.addEventListener('click', (evt) => {
+			seleccionarVP(evt);
+		});
+	});
+};
+
+const seleccionarVP = async (evt) => {
+	evt.preventDefault();
+	const contenedor = evt.target.parentElement;
+	if (vpContainer.getElementsByClassName('seleccionado').length === 0) {
+		contenedor.classList.add('seleccionado');
+		document
+			.querySelectorAll('.estrella')
+			.forEach((el) => el.classList.add('hidden'));
+		const objContenedor = {
+			cantidad: contenedor.children[0].textContent,
+			image: contenedor.children[1].src,
+		};
+		evt.target.classList.remove('hidden');
+		evt.target.href = '#conversion';
+		evt.target.innerHTML = 'Ver resultado';
+		await mostrarSeleccionado(objContenedor);
+	}
+};
+
+const mostrarSeleccionado = async ({ cantidad, image }) => {
+	mainContainer.innerHTML += `
+		<div id='conversion'>
+		<h2>Conversion en proceso</h2>
+		</div>
+	`;
+	let objSeleccionado = valorantPoints.find((obj) => obj.cantidad === cantidad);
+	let precioFinal = await calcularPrecioPesos(objSeleccionado.precio);
+	document.querySelector('#conversion').innerHTML = `
+		
+			<h2 >🔥Conversion finalizada🔥</h2>
+			<div class='contenedor-vp'>
+				<h2>${objSeleccionado.cantidad}</h2>
+				<img src='${image}'>
+				<p>Deberias abonar aproximadamente $${precioFinal} ARS</p>
+			</div>
+		
+		`;
+};
+
+const calcularPrecioPesos = async (dolaresVP) => {
+	let precioDolarVenta = await precioVentaOficial();
+	let precioFinalPesos = dolaresVP * precioDolarVenta * IMP_ARG;
+	return precioFinalPesos;
 };

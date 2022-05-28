@@ -103,7 +103,8 @@ form {
 
 .contenedor-agente,
 .contenedor-rango,
-.contenedor-equipo {
+.contenedor-equipo ,
+.contenedor-vp{
   width: 70%;
   margin: 0 auto;
   border: 2px solid black;
@@ -239,7 +240,8 @@ form {
 @media screen and (max-width: 768px) {
   .contenedor-agente,
   .contenedor-rango,
-  .contenedor-equipo {
+  .contenedor-equipo,
+  .contenedor-vp {
     width: 90%;
   }
 
